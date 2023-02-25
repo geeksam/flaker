@@ -3,12 +3,12 @@
 **My apologies for the snarky heading.  I just couldn't pass up the joke.**
 
 For what it's worth, I've greatly enjoyed using Faker over the years, and I
-think it's great for generating semi-realistic looking data for **demo**
+think it's great for generating semi-realistic looking data for _**demo**_
 purposes.
 
 Unfortunately, after literal years spent trying to find and eliminate flaky
 tests in mature Rails apps, I am now of the opinion that Faker is fundamentally
-unsuitable for generating **test** data.
+unsuitable for generating _**test**_ data.
 
 If I've overlooked something, I'd love to be wrong!
 
@@ -28,8 +28,8 @@ calls "Deterministic Random", which can mitigate -- but not eliminate -- one
 cause of test flakiness.
 
 Unfortunately, Faker's use of a PRNG creates **unavoidable order dependencies**
-between tests, because **the number of times a PRNG has been called is global
-state**.
+between tests, because _**the number of times a PRNG has been called is global
+state**_.
 
 Worse, this can horribly break RSpec's "bisect" feature _(which is specifically
 designed to make it easier to isolate flaky tests!)_ by giving it pathological
@@ -54,7 +54,8 @@ fail **if and only if** it is the final test to run with a non-blank value in
 `ENV["FAIL_ON_LAST"]`.
 
 This may seem trivial and/or contrived.  I assure you, reader:  I have
-personally seen equivalent behavior on a real-world codebase.  (See "Final Thoughts", below.)
+personally seen equivalent behavior on a real-world codebase.
+(See "Final Thoughts", below.)
 
 I've provided some Rake tasks to quickly demonstrate the behavior:
 
@@ -77,7 +78,7 @@ There are two important things to notice:
 1. The total time it takes for RSpec to run using the `--bisect` flag is
    approximately **2 orders of magnitude** longer than the time it takes to run
    the entire test suite once.
-2. When it does finally finish, RSpec reports that it unable to remove any
+2. When it does finally finish, RSpec reports that it was unable to remove any
    tests from the set it was given.  _(Note the "Reduced [...] from 9 to 9" in
    its output.)_
 
@@ -92,9 +93,10 @@ reproduction command" that will run the fewest tests required to reproduce the
 failure.
 
 RSpec bisect works by:
-1. Taking a command that _**should**_ reproduce a failure,
-2. Confirming that the failure is, in fact, order-dependent, and
-3. Trying to figure out which tests can be skipped without causing the failing
+1. Taking a command that _**should**_ reproduce a failure;
+2. Confirming that running that command does, in fact, cause at least one test to fail;
+3. Confirming that the failure is, in fact, order-dependent;
+4. Trying to figure out which tests can be skipped without causing the failing
    test to pass.
 
 (If you're curious about this, I'll refer you to RSpec's
